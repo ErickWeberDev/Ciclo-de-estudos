@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Ciclos de Estudo — HTML + JS + CSS</title>
+  <style>
+    :root {
+      --bg: #f9f9fb;
+      --card: #ffffff;
+      --primary: #4a90e2;
+      --danger: #e94e4e;
+      --text: #333;
+      --muted: #777;
+      --radius: 12px;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      text-align: center;
+      background: var(--primary);
+      color: #fff;
+      padding: 1rem;
+    }
+
+    main {
+      flex: 1;
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      width: 100%;
+    }
+
+    footer {
+      text-align: center;
+      background: var(--primary);
+      color: #fff;
+      padding: 1rem;
+    }
+
+    h1, h2, h3 {
+      margin: 0.5rem 0;
+    }
+
+    form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      background: var(--card);
+      padding: 1rem;
+      border-radius: var(--radius);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    form label {
+      flex: 1 1 100%;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    form input {
+      flex: 1 1 200px;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: var(--radius);
+    }
+
+    form button {
+      padding: 0.5rem 1rem;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    form button:hover {
+      background: #357ab7;
+    }
+
+    .subject-card {
+      background: var(--card);
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: var(--radius);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 1rem;
+      align-items: start;
+    }
+
+    .subject-card header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      grid-column: 1 / -1;
+    }
+
+    .subject-title {
+      font-size: 1.2rem;
+    }
+
+    .subject-controls button, .clear-progress {
+      background: var(--danger);
+      border: none;
+      color: #fff;
+      padding: 0.3rem 0.6rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 0.8rem;
+      margin-left: 0.3rem;
+      transition: background 0.3s;
+    }
+
+    .subject-controls button:hover, .clear-progress:hover {
+      background: #c43d3d;
+    }
+
+    .subject-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+      color: var(--muted);
+      grid-column: 1 / -1;
+    }
+
+    progress {
+      width: 100%;
+      height: 1rem;
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .subject-checkboxes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+      grid-column: 1 / -1;
+    }
+
+    .subject-checkboxes label {
+      background: #f1f1f1;
+      padding: 0.3rem 0.6rem;
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .subject-checkboxes input[type="checkbox"] {
+      transform: scale(1.2);
+    }
+
+    .subject-checkboxes label:hover {
+      background: #e1e1e1;
+    }
+
+    .clear-progress {
+      display: none;
+      grid-column: 1 / -1;
+      justify-self: end;
+      margin-top: 0.5rem;
+    }
+
+    @media(min-width: 768px){
+      .subject-card {
+        grid-template-columns: 2fr 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Ciclos de Estudo</h1>
+    <p>Organize suas matérias em blocos (cada checkbox = 1 ciclo/hora).</p>
+  </header>
+
+  <main>
+    <section aria-labelledby="form-title">
+      <h2 id="form-title">Adicionar matéria</h2>
+      <form id="add-subject-form">
+        <label for="subject-name">Nome da matéria</label>
+        <input type="text" id="subject-name" name="subjectName" required placeholder="Ex.: Matemática">
+
+        <label for="subject-hours">Quantidade de ciclos (checkboxes)</label>
+        <input type="number" id="subject-hours" name="subjectHours" min="1" max="100" value="1" required>
+
+        <button type="submit">Adicionar matéria</button>
+      </form>
+    </section>
+
+    <section aria-labelledby="subjects-title">
+      <h2 id="subjects-title">Minhas matérias</h2>
+      <div id="subjects-container"></div>
+    </section>
+
+    <template id="subject-template">
+      <article class="subject-card" data-subject-id="">
+        <header>
+          <h3 class="subject-title"></h3>
+          <div class="subject-controls">
+            <button type="button" class="delete-subject">Excluir</button>
+          </div>
+        </header>
+
+        <div class="subject-meta">
+          <span class="subject-hours"></span>
+          <progress class="subject-progress"></progress>
+        </div>
+
+        <div class="subject-checkboxes"></div>
+        <button type="button" class="clear-progress">Limpar progresso</button>
+      </article>
+    </template>
+  </main>
+
+  <footer>
+    <p>Protótipo criado para organizar ciclos de estudo — com salvamento no navegador.</p>
+  </footer>
+
+  <script>
+    const form = document.getElementById('add-subject-form');
+    const container = document.getElementById('subjects-container');
+    const template = document.getElementById('subject-template');
+
+    function saveData() {
+      const data = [];
+      container.querySelectorAll('.subject-card').forEach(card => {
+        const id = card.dataset.subjectId;
+        const title = card.querySelector('.subject-title').textContent;
+        const hours = parseInt(card.querySelectorAll('.subject-checkboxes input').length);
+        const checks = Array.from(card.querySelectorAll('.subject-checkboxes input')).map(chk => chk.checked);
+        data.push({ id, title, hours, checks });
+      });
+      localStorage.setItem('studySubjects', JSON.stringify(data));
+    }
+
+    function loadData() {
+      const saved = localStorage.getItem('studySubjects');
+      if (!saved) return;
+      const data = JSON.parse(saved);
+      data.forEach(item => createSubject(item.title, item.hours, item.id, item.checks));
+    }
+
+    function createSubject(title, hours, id = crypto.randomUUID(), checks = []) {
+      const clone = template.content.cloneNode(true);
+      const card = clone.querySelector('.subject-card');
+      card.dataset.subjectId = id;
+      card.querySelector('.subject-title').textContent = title;
+      card.querySelector('.subject-hours').textContent = `${hours} ciclos`;
+
+      const progress = card.querySelector('.subject-progress');
+      progress.max = hours;
+      progress.value = checks.filter(Boolean).length;
+
+      const boxContainer = card.querySelector('.subject-checkboxes');
+      const clearBtn = card.querySelector('.clear-progress');
+
+      function updateProgress() {
+        const checked = card.querySelectorAll('.subject-checkboxes input:checked').length;
+        progress.value = checked;
+        clearBtn.style.display = (checked === hours) ? 'inline-block' : 'none';
+        saveData();
+      }
+
+      for (let i = 0; i < hours; i++) {
+        const label = document.createElement('label');
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.checked = checks[i] || false;
+        input.addEventListener('change', updateProgress);
+        label.appendChild(input);
+        label.append(` ${i + 1}`);
+        boxContainer.appendChild(label);
+      }
+
+      clearBtn.addEventListener('click', () => {
+        card.querySelectorAll('.subject-checkboxes input').forEach(chk => chk.checked = false);
+        updateProgress();
+      });
+
+      card.querySelector('.delete-subject').addEventListener('click', () => {
+        if(confirm('Tem certeza que deseja excluir esta matéria?')){
+          card.remove();
+          saveData();
+        }
+      });
+
+      container.appendChild(card);
+      updateProgress();
+    }
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const name = document.getElementById('subject-name').value.trim();
+      const hours = parseInt(document.getElementById('subject-hours').value);
+      if (!name || isNaN(hours) || hours < 1) return;
+      createSubject(name, hours);
+      form.reset();
+    });
+
+    loadData();
+  </script>
+</body>
+</html>
