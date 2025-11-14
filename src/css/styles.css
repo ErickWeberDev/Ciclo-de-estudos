@@ -1,0 +1,297 @@
+
+:root {
+  --bg: #f9f9fb;
+  --card: #ffffff;
+  --primary: #4a90e2;
+  --danger: #e94e4e;
+  --text: #333;
+  --muted: #777;
+  --radius: 12px;
+}
+
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+
+  /* transição do tema */
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+html {
+  transition: background 0.25s ease, color 0.25s ease;
+}
+header {
+  text-align: center;
+  background: var(--primary);
+  color: #fff;
+  padding: 1rem;
+}
+
+footer {
+  text-align: center;
+  background: var(--primary);
+  color: #fff;
+  padding: 1rem;
+}
+
+h1, h2, h3 {
+  margin: 0.5rem 0;
+}
+
+main {
+  flex: 1;
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  width: 90%;
+}
+
+.controls-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  background: var(--card);
+  padding: 1rem;
+  border-radius: var(--radius);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  align-items: center;
+}
+
+form label {
+  flex: 1 1 100%;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+form input[type="text"],
+form input[type="number"] {
+  width: 100%;
+  flex: 1 1 auto;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: var(--radius);
+}
+
+
+.btn, button {
+  padding: 0.5rem 0.9rem;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn:hover { background:#357ab7 }
+.btn.ghost { background: transparent; color: var(--primary); border: 1px solid #cfe6ff }
+
+
+.subject-card {
+  background: var(--card);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: var(--radius);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+
+  /* novo grid responsivo */
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .subject-card {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+.subject-card header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  grid-column: 1 / -1;
+}
+
+.subject-title {
+  font-size: 1.2rem;
+}
+
+.subject-controls button, .clear-progress {
+  background: var(--danger);
+  border: none;
+  color: #fff;
+  padding: 0.3rem 0.6rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 0.8rem;
+  margin-left: 0.3rem;
+  transition: background 0.3s;
+}
+
+.subject-controls button:hover, .clear-progress:hover {
+  background: #c43d3d;
+}
+
+.subject-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+  grid-column: 1 / -1;
+}
+
+progress {
+  width: 100%;
+  height: 1rem;
+  max-width: 100%;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+/* ============================
+   CHECKBOXES DAS HORAS
+============================ */
+.subject-checkboxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  grid-column: 1 / -1;
+}
+
+.subject-checkboxes label {
+  background: #f1f1f1;
+  padding: 0.3rem 0.6rem;
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.subject-checkboxes input[type="checkbox"] {
+  transform: scale(1.2);
+}
+
+.subject-checkboxes label:hover {
+  background: #e1e1e1;
+}
+
+.clear-progress {
+  display: none;
+  grid-column: 1 / -1;
+  justify-self: end;
+  margin-top: 0.5rem;
+}
+
+/* ============================
+   BREAKPOINT INTERMEDIÁRIO
+============================ */
+@media (max-width: 768px) {
+  .subject-card {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================
+   MOBILE — TELA MUITO PEQUENA
+============================ */
+@media (max-width: 450px) {
+
+  header {
+    padding: 0.8rem;
+  }
+
+  #theme-toggle {
+    margin-top: 0.5rem;
+    width: 100%;
+  }
+
+  form {
+    padding: 0.8rem;
+    gap: 0.8rem;
+  }
+
+  .controls-row {
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  .subject-card {
+    padding: 0.8rem;
+    grid-template-columns: 1fr !important;
+  }
+
+  .subject-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+
+  .subject-checkboxes {
+    gap: 0.35rem;
+  }
+
+  .subject-checkboxes label {
+    padding: 0.25rem 0.45rem;
+    font-size: 0.78rem;
+  }
+}
+
+/* ============================
+   TEMA ESCURO
+============================ */
+[data-theme="dark"] {
+  --bg: #0e0f10;
+  --card: #1a1c1f;
+  --primary: #4a90e2;
+  --danger: #d85c5c;
+  --text: #e6e6e6;
+  --muted: #9a9a9a;
+}
+
+/* ============================
+   BOTÃO DO TEMA
+============================ */
+#theme-toggle {
+  padding: 0.45rem 1rem;
+  font-size: 0.95rem;
+  background: #ffffff22;
+  border: 2px solid #ffffff55;
+  border-radius: 14px;
+  backdrop-filter: blur(4px);
+  color: #fff;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+#theme-toggle:hover {
+  background: #ffffff33;
+  border-color: #ffffff88;
+}
